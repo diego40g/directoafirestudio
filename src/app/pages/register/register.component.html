@@ -1,1 +1,4 @@
-<p>register works!</p>
+<div class="container">
+    <app-auth-form [isLogin]="false" (registerSubmit)="handleRegister($event)"></app-auth-form>
+    <a routerLink="/login">Already have an account? Login here.</a>
+</div>
