@@ -1,0 +1,18 @@
+<div class="container">
+  <h1>Welcome!</h1>
+  <p>Please choose how you want to authenticate:</p>
+  <div>
+    <a routerLink="/login">Login with Email</a>
+  </div>
+  <div>
+    <button (click)="loginWithGoogle()">
+      <img src="assets/images/gmail.webp" alt="google icon">
+      Login with Google
+    </button>
+  </div>
+
+  <div>
+    <p>No account yet?</p>
+    <a routerLink="/register">Register with Email</a>
+  </div>
+</div>
