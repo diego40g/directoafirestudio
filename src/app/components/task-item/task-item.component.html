@@ -1,1 +1,24 @@
-<p>task-item works!</p>
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Create New Task</h2>
+        <form (ngSubmit)="saveTask()">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" [(ngModel)]="task.title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" [(ngModel)]="task.description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="invitation">Invitation (comma separated emails):</label>
+                <input type="text" id="invitation" [(ngModel)]="invitationString" name="invitation">
+            </div>
+            <div class="modal-actions">
+                <button type="button" (click)="closeModal()">Cancel</button>
+                <button type="submit">Save Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+  
