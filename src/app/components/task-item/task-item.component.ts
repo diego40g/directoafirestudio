@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Task } from '../../shared/model/task';
+import { Task, TaskInvitation } from '../../shared/model/task';
 import { TaskService } from '../../services/task.service';
+import { DocumentReference } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-task-item',
@@ -15,11 +16,10 @@ export class TaskItemComponent {
   @Input() createdByUserId!: string;
   @Output() close = new EventEmitter<void>();
   @Output() taskCreated = new EventEmitter<Task>();
-  task: Task = {
-    createdBy: '', // You'll likely need to set this based on the logged-in user
+  task: TaskInvitation = {
     title: '',
     description: '',
-    invitation: [],
+    invitation: []
   };
 
   constructor(private taskService: TaskService) {}
@@ -27,10 +27,26 @@ export class TaskItemComponent {
   invitationString: string = '';
 
   saveTask() {
-    this.task.invitation = this.invitationString.split(',').map(email => email.trim()).filter(email => email !== '');
-    this.task.createdBy = this.createdByUserId;
-    this.taskService.addTask(this.task).then(() => {
-        this.taskCreated.emit(this.task);
+    if (!this.createdByUserId) {
+      console.error('User ID is missing, cannot save task.');
+      return;
+    }
+    const taskToSave = {
+        title: this.task.title,
+        description: this.task.description,
+        invitation: this.invitationString.split(',').map(email => email.trim()).filter(email => email !== ''),
+        createdBy: this.createdByUserId
+    };
+
+  this.taskService.addTask(this.createdByUserId, taskToSave).then((docRef: DocumentReference) => {
+    const newTaskWithId: Task = {
+            ...taskToSave,
+            id: docRef.id,
+            createdBy: this.createdByUserId, 
+            isSharedCopy: false,
+            originalCreatorId: this.createdByUserId
+        };
+        this.taskCreated.emit(newTaskWithId);
         this.onClose();
     }).catch(err => {
       console.error('Error creating task:', err);

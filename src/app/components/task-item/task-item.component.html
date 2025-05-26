@@ -1,4 +1,4 @@
-<div class="modal-overlay" (click)="closeModal()">
+<div class="modal-overlay" (click)="onClose()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h2>Create New Task</h2>
         <form (ngSubmit)="saveTask()">
@@ -15,10 +15,9 @@
                 <input type="text" id="invitation" [(ngModel)]="invitationString" name="invitation">
             </div>
             <div class="modal-actions">
-                <button type="button" (click)="closeModal()">Cancel</button>
+                <button type="button" (click)="onClose()">Cancel</button>
                 <button type="submit">Save Task</button>
             </div>
         </form>
     </div>
 </div>
-  
