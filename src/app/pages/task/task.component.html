@@ -8,17 +8,23 @@
     <li *ngFor="let task of tasks">
       <h3>{{ task.title }}</h3>
       <p>{{ task.description }}</p>
-      <p>Created by: {{ task.createdBy }}</p>
-      <p>Invitations: {{ task.invitation.join(', ') }}</p>
+      <p>
+        Owner: {{ task.createdBy }}
+        <span *ngIf="task.isSharedCopy && task.originalCreatorId && task.originalCreatorId !== task.createdBy">
+          (Shared by: {{ task.originalCreatorId }})
+        </span>
+      </p>
+      <p *ngIf="task.invitation && task.invitation.length > 0 && !task.isSharedCopy">
+        Invitations sent: {{ task.invitation.join(', ') }}
+      </p>
       <!-- Add buttons for Edit and Delete later -->
     </li>
-  </ul>
+    </ul>
 </div>
 
-<div *ngIf="isModalOpen" class="modal-container">
+<div *ngIf="isModalOpen && currentUserId" class="modal-container">
   <app-task-item
     [createdByUserId]="currentUserId"
     (close)="closeCreateTaskModal()"
     (taskCreated)="onTaskCreated($event)"></app-task-item>
 </div>
-<p>task works!</p>
