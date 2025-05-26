@@ -32,12 +32,10 @@ export class AuthFormComponent {
     this.registerSubmit.emit({ email: this.email, password: this.password });
   }
 
-  // This method will be called by the parent component to clear the form after submission
   clearForm() {
     this.email = '';
     this.password = '';
     this.passwordConfirm = '';
   }
-
 
 }

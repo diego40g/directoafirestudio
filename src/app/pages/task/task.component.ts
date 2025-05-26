@@ -48,7 +48,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   loadTasks(userId: string) {
     if (this.tasksSubscription) {
-      this.tasksSubscription.unsubscribe(); // Cancelar suscripción anterior si existe
+      this.tasksSubscription.unsubscribe();
     }
     this.tasksSubscription = this.taskService.getTasks(userId).subscribe(tasks => {
       this.tasks = tasks;
@@ -56,29 +56,21 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   openCreateTaskModal() {
-    if (this.currentUserId) { // Solo abrir si hay un usuario
+    if (this.currentUserId) {
         this.isModalOpen = true;
     } else {
         console.error("No user logged in to create a task.");
-        // Podrías mostrar un mensaje al usuario
     }
   }
 
   closeCreateTaskModal() {
     this.isModalOpen = false;
-    // No es necesario llamar a loadTasks aquí si onTaskCreated lo hace,
-    // o si la lista se actualiza en tiempo real por la suscripción.
   }
 
   onTaskCreated(newTask: Task) {
-    // La lista se actualiza a través de la suscripción en loadTasks.
-    // Si no usaras una suscripción en tiempo real, aquí añadirías la tarea a this.tasks.
-    // this.tasks.push(newTask); // Ejemplo si no fuera en tiempo real
-    // O si loadTasks no se llama automáticamente por la suscripción:
     if (this.currentUserId) {
-        // this.loadTasks(this.currentUserId); // Opcional, si la suscripción no lo cubre
     }
-    this.isModalOpen = false; // Asegúrate de cerrar el modal
+    this.isModalOpen = false; 
   }
 
   updateTask(task: Task) {
