@@ -17,6 +17,7 @@ import { User } from '@angular/fire/auth';
 export class TaskComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   currentUserId: string | null = null;
+  currentUserEmail: string | null = null;
   isModalOpen = false;
   private authSubscription: Subscription | null = null;
   private tasksSubscription: Subscription | null = null;
@@ -25,6 +26,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authSubscription = this.authService.onAuthStateChanged().subscribe((user: User | null) => { 
+      this.currentUserEmail = user ? user.email : null;
       this.currentUserId = user ? user.uid : null;
       if (this.currentUserId) {
         this.loadTasks(this.currentUserId);
@@ -86,6 +88,20 @@ export class TaskComponent implements OnInit, OnDestroy {
       this.taskService.deleteTask(this.currentUserId, taskId)
         .then(() => console.log('Task deleted'))
         .catch(err => console.error('Error deleting task', err));
+    }
+  }
+
+  markTaskAsCompleted(task: Task) {
+    if (this.currentUserId && task.id) {
+      this.taskService.updateTaskCompletionStatus(this.currentUserId, task.id, true)
+        .then(() => console.log('Task marked as completed'))
+        .catch(err => console.error('Error marking task as completed', err));
+    }
+  }
+
+  markTaskAsIncomplete(task: Task) {
+    if (this.currentUserId && task.id) {
+      this.taskService.updateTaskCompletionStatus(this.currentUserId, task.id, false);
     }
   }
 }
