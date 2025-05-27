@@ -1,1 +1,46 @@
-<p>task works!</p>
+<h1>Task List for {{currentUserEmail}}</h1>
+
+<button (click)="openCreateTaskModal()">Add New Task</button>
+
+<div *ngIf="tasks && tasks.length > 0">
+  <h2>My Tasks</h2>
+  <ul>
+ <li *ngFor="let task of tasks">
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+      <p>
+ Owner: {{ task.createdByEmail }}
+        <span *ngIf="task.isSharedCopy && task.originalCreatorId && task.originalCreatorId !== task.createdBy">
+ (Shared by: {{ task.originalCreatorEmail }})
+        </span>
+      </p>
+      <p *ngIf="task.invitation && task.invitation.length > 0 && !task.isSharedCopy">
+ Invitations sent: {{ task.invitation.join(', ') }}
+      </p>
+
+      <div>
+        <input type="checkbox" [checked]="task.completed" (change)="task.completed ? markTaskAsIncomplete(task!) : markTaskAsCompleted(task!)">
+        <span>{{ task.completed ? 'Completed' : 'Incomplete' }}</span>
+      </div>
+
+      <!-- Show Edit and Delete buttons only if the current user is the creator or the original creator of a shared task -->
+ <!-- <div *ngIf="currentUserId === task.createdBy || (task.isSharedCopy && currentUserId === task.originalCreatorId)"> -->
+  <div *ngIf="task.createdBy===task.originalCreatorId">
+        <button (click)="updateTask(task)">Edit</button>
+        <button (click)="deleteTask(task.id!)">Delete</button>
+      </div>
+
+      <!-- Only show complete/incomplete button for shared tasks where the current user is not the original creator -->
+ <div *ngIf="task.isSharedCopy && currentUserId !== task.originalCreatorId">
+        <!-- The checkbox above already handles completion status for all tasks -->
+      </div>
+    </li>
+    </ul>
+</div>
+
+<div *ngIf="isModalOpen && currentUserId" class="modal-container">
+  <app-task-item
+    [createdByUserId]="currentUserId"
+    (close)="closeCreateTaskModal()"
+    (taskCreated)="onTaskCreated($event)"></app-task-item>
+</div>
