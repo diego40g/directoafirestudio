@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './auth-form.component.html',
-  styleUrl: './auth-form.component.css'
+  styleUrls: ['./auth-form.component.css']
 })
 export class AuthFormComponent {
   email = '';
