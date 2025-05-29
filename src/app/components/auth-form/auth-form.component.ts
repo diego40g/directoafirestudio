@@ -28,7 +28,7 @@ export class AuthFormComponent {
       alert('Passwords do not match');
       return;
     }
-    console.log(this.email, this.password)
+    // Removed debug logging to prevent exposure of sensitive information
     this.registerSubmit.emit({ email: this.email, password: this.password });
   }
 
