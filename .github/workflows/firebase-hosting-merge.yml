@@ -9,13 +9,13 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    environment: production 
     steps:
       - uses: actions/checkout@v4
       - run: npm ci 
       - name: Configure Firebase environment variables
         run: npm run set-env
         env: 
-          env:
           PROD_FB_API_KEY: ${{ secrets.PROD_FB_API_KEY }}
           PROD_FB_AUTH_DOMAIN: ${{ secrets.PROD_FB_AUTH_DOMAIN }}
           PROD_FB_PROJECT_ID: ${{ secrets.PROD_FB_PROJECT_ID }}
