@@ -1,6 +1,6 @@
 <div class="modal-overlay" (click)="onClose()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-        <h2>Create New Task</h2>
+        <h2>{{ modalTitle }}</h2>
         <form (ngSubmit)="saveTask()">
             <div class="form-group">
                 <label for="title">Title:</label>
@@ -16,7 +16,7 @@
             </div>
             <div class="modal-actions">
                 <button type="button" (click)="onClose()">Cancel</button>
-                <button type="submit">Save Task</button>
+                <button type="submit">{{ saveButtonText }}</button>
             </div>
         </form>
     </div>

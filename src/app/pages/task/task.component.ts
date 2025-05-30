@@ -19,6 +19,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   currentUserId: string | null = null;
   currentUserEmail: string | null = null;
   isModalOpen = false;
+  editingTask: Task | null = null;
   private authSubscription: Subscription | null = null;
   private tasksSubscription: Subscription | null = null;
 
@@ -59,32 +60,37 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   openCreateTaskModal() {
     if (this.currentUserId) {
-        this.isModalOpen = true;
+      this.editingTask = null;
+      this.isModalOpen = true;
     } else {
-        console.error("No user logged in to create a task.");
+      console.error("No user logged in to create a task.");
     }
   }
 
-  closeCreateTaskModal() {
+  openEditTaskModal(task: Task) {
+    if (this.currentUserId) {
+      this.editingTask = { ...task }; // Clonar la tarea para evitar mutaciones directas
+      this.isModalOpen = true;
+    } else {
+      console.error("No user logged in to edit a task.");
+    }
+  }
+
+  closeModal() {
     this.isModalOpen = false;
+    this.editingTask = null; // Limpiar la tarea en edición al cerrar
   }
 
   onTaskCreated(newTask: Task) {
-    if (this.currentUserId) {
-    }
-    this.isModalOpen = false; 
+    this.closeModal();
   }
 
-  updateTask(task: Task) {
-    if (this.currentUserId && task.id) {
-      this.taskService.updateTask(this.currentUserId, task)
-        .then(() => console.log('Task updated'))
-        .catch(err => console.error('Error updating task', err));
-    }
+  onTaskUpdated(updatedTask: Task) {
+    this.closeModal();
   }
 
   deleteTask(taskId: string) {
-    if (this.currentUserId) {
+    if (this.currentUserId && taskId) {
       this.taskService.deleteTask(this.currentUserId, taskId)
         .then(() => console.log('Task deleted'))
         .catch(err => console.error('Error deleting task', err));
@@ -101,7 +107,9 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   markTaskAsIncomplete(task: Task) {
     if (this.currentUserId && task.id) {
-      this.taskService.updateTaskCompletionStatus(this.currentUserId, task.id, false);
+      this.taskService.updateTaskCompletionStatus(this.currentUserId, task.id, false)
+        .then(() => console.log('Task marked as incomplete'))
+        .catch(err => console.error('Error marking task as incomplete', err));
     }
   }
 }
